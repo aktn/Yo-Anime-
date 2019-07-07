@@ -11,10 +11,10 @@ const Container = styled.div`
 const List = styled.div``;
 
 const Item = styled.img`
-  min-width: 400px;
-  max-width: 500px
-  min-height: 400px;
-  max-height: 500px
+  min-width: 200px;
+  max-width: 300px
+  min-height: 200px;
+  max-height: 300px
   margin: 10px 4px;
   object-fit: cover !important;
   @media screen and (min-width: 768px){
