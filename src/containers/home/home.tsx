@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-const Wrapper = styled.div`
+const Container = styled.div`
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
-  margin: 50px;
-  width: 100%;
+  padding: 5px;
+  justify-content: space-evenly;
 `;
 
-const List = styled.ul`
-  display: flex;
-`;
+const List = styled.div``;
 
-const Details = styled.li`
-  flex: auto;
+const Item = styled.img`
   min-width: 400px;
-  list-style: none;
+  max-width: 500px
+  min-height: 400px;
+  max-height: 500px
+  margin: 10px 4px;
+  object-fit: cover !important;
+  @media screen and (min-width: 768px){
+    width: 300px;
+    height: 300px;
+    margin: 5px;
+  }
 `;
 
 export const Home = () => {
@@ -29,15 +34,13 @@ export const Home = () => {
   });
 
   return (
-    <Wrapper>
+    <Container>
       {data.map((anime: any) => (
         <List key={anime.id}>
-          <Details>
-            <img src={anime.attributes.posterImage.tiny} />
-          </Details>
+          <Item src={anime.attributes.posterImage.medium} />
         </List>
       ))}
-    </Wrapper>
+    </Container>
   );
 };
 
