@@ -17,10 +17,21 @@ const Item = styled.img`
   max-height: 200px
   margin: 10px 4px;
   object-fit: cover !important;
-  @media screen and (min-width: 768px){
+  cursor: pointer;
+  background-color: #fff;
+  transition-duration:2s;
+  -webkit-transition-duration:0.5s;
+  &:hover{ 
+    transition: all 400ms cubic-bezier(.2,.88,.52,1);
+    transform: translate(-1rem, -1rem);
+     box-shadow:0 -5px 0 -5px #eee, 
+     4px 4px 0 1px #fff;
+    border-radius: 5px;
+  }  
+  @media screen and (min-width: 800px){
     width: 300px;
     height: 300px;
-    margin: 5px;
+    margin: 15px;
   }
 `;
 
