@@ -11,10 +11,10 @@ const Container = styled.div`
 const List = styled.div``;
 
 const Item = styled.img`
-  min-width: 200px;
+  min-width: 140px;
   max-width: 300px
-  min-height: 200px;
-  max-height: 300px
+  min-height: 100px;
+  max-height: 200px
   margin: 10px 4px;
   object-fit: cover !important;
   @media screen and (min-width: 768px){
@@ -27,11 +27,17 @@ const Item = styled.img`
 export const Home = () => {
   const [data, setAnime] = useState([]);
 
+  async function getAnime() {
+    const response = await fetch(
+      "https://kitsu.io/api/edge/anime?page[limit]=20&page[offset]=0"
+    );
+    const data = await response.json();
+    setAnime(data.data);
+  }
+
   useEffect(() => {
-    fetch("https://kitsu.io/api/edge/anime")
-      .then(response => response.json())
-      .then(data => setAnime(data.data));
-  });
+    getAnime();
+  }, []);
 
   return (
     <Container>
