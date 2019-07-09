@@ -39,7 +39,7 @@ const App: React.FC = () => {
       );
       const data = await response.json();
       setResults(data.data);
-      console.log(data);
+      // console.log(data);
     }
     searchAnime();
   }, [query]);

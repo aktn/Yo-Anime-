@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import styled from "styled-components";
 import Slide from "../../components/general/slider";
 
@@ -55,15 +55,37 @@ const Title = styled.h3`
 `;
 
 export const Home = () => {
+  // For list of animes on initial render
   const [data, setAnime] = useState([]);
 
-  const [sliderActive, setSliderStatus] = useState({ open: false });
-  const displaySlide = () => {
-    const slideStatus = sliderActive.open;
+  // Set a particular anime's ID after selection
+  const [animeID, setAnimeID] = useState();
 
+  // Set the slider's status
+  const [sliderActive, setSliderStatus] = useState({ open: false });
+
+  // Activate slide
+  const displaySlide = (id: any) => {
+    const slideStatus = sliderActive.open;
     setSliderStatus({ open: !slideStatus });
+    if (!sliderActive.open) setAnimeID(id);
   };
 
+  // Retrieve anime by selected ID
+  const [animeDetails, setAnimeDetails] = useState({});
+  async function getAnimeDetails() {
+    const response = await fetch(`https://kitsu.io/api/edge/anime/${animeID}`);
+    const data = await response.json();
+    setAnimeDetails(data.data);
+  }
+  useEffect(() => {
+    // Only load the data if an ID exits
+    if (animeID) {
+      getAnimeDetails();
+    }
+  }, [animeID]);
+
+  // Retrieve a list of animes
   async function getAnime() {
     const response = await fetch(
       "https://kitsu.io/api/edge/anime?page[limit]=20&page[offset]=0"
@@ -71,10 +93,18 @@ export const Home = () => {
     const data = await response.json();
     setAnime(data.data);
   }
-
   useEffect(() => {
-    getAnime();
+    if (!sliderActive.open) {
+      getAnime();
+    }
   }, []);
+
+  const closeSlide = () => {
+    const slideStatus = sliderActive.open;
+    setSliderStatus({ open: !slideStatus });
+  };
+
+  // const Slide = React.lazy(() => import("../../components/general/slider"));
 
   return (
     <Container>
@@ -82,14 +112,17 @@ export const Home = () => {
         <List key={anime.id}>
           <Item
             src={anime.attributes.posterImage.medium}
-            onClick={() => displaySlide()}
+            onClick={() => displaySlide(anime.id)}
           />
           <Overflow>
             <Title> {anime.attributes.titles.en} </Title>
           </Overflow>
         </List>
       ))}
-      <Slide design={sliderActive.open} close={displaySlide} />
+      {/* <Suspense fallback={<div>Loading...</div>}>
+        <Slide design={sliderActive.open} id={animeID} close={closeSlide} />
+      </Suspense> */}
+      <Slide design={sliderActive.open} id={animeID} close={closeSlide} />
     </Container>
   );
 };
