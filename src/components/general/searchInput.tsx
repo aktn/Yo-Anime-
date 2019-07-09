@@ -29,6 +29,7 @@ const SearchInput = (props: any) => {
         style={inputStyle}
         placeholder="Search..."
         onChange={props.searchString}
+        autoFocus
       />
     </Wrapper>
   );
