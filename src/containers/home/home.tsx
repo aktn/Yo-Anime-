@@ -1,6 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import styled from "styled-components";
 import Slide from "../../components/general/slider";
+import Spinner from "../../components/general/spinner";
 
 const Container = styled.div`
   display: flex;
@@ -56,7 +57,10 @@ const Title = styled.h3`
 
 export const Home = () => {
   // For list of animes on initial render
-  const [data, setAnime] = useState([]);
+  const [animes, setAnime] = useState([]);
+
+  // Spinner 1 for loading list of animes
+  const [spinner1, setSpinner1] = useState(true);
 
   // Set a particular anime's ID after selection
   const [animeID, setAnimeID] = useState();
@@ -71,16 +75,20 @@ export const Home = () => {
     if (!sliderActive.open) setAnimeID(id);
   };
 
+  // Spinner two for loading modal slide
+  const [spinner2, setSpinner2] = useState();
   // Retrieve anime by selected ID
   const [animeDetails, setAnimeDetails] = useState({});
   async function getAnimeDetails() {
     const response = await fetch(`https://kitsu.io/api/edge/anime/${animeID}`);
     const data = await response.json();
     setAnimeDetails(data.data);
+    setSpinner2(false);
   }
   useEffect(() => {
     // Only load the data if an ID exits
     if (animeID) {
+      setSpinner2(true);
       getAnimeDetails();
     }
   }, [animeID]);
@@ -92,6 +100,7 @@ export const Home = () => {
     );
     const data = await response.json();
     setAnime(data.data);
+    setSpinner1(false);
   }
   useEffect(() => {
     if (!sliderActive.open) {
@@ -108,7 +117,8 @@ export const Home = () => {
 
   return (
     <Container>
-      {data.map((anime: any) => (
+      {spinner1 ? <Spinner /> : ""}
+      {animes.map((anime: any) => (
         <List key={anime.id}>
           <Item
             src={anime.attributes.posterImage.medium}
@@ -122,7 +132,12 @@ export const Home = () => {
       {/* <Suspense fallback={<div>Loading...</div>}>
         <Slide design={sliderActive.open} id={animeID} close={closeSlide} />
       </Suspense> */}
-      <Slide design={sliderActive.open} id={animeID} close={closeSlide} />
+      <Slide
+        spinner={spinner2}
+        design={sliderActive.open}
+        anime={animeDetails}
+        close={closeSlide}
+      />
     </Container>
   );
 };
