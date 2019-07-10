@@ -6,7 +6,6 @@ import Spinner from "../../components/general/spinner";
 const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
-  padding: 5px;
   justify-content: space-evenly;
   width: 100%;
 `;
@@ -16,7 +15,7 @@ const List = styled.div`
 `;
 
 const Item = styled.img`
-  min-width: 140px;
+  min-width: 170px;
   max-width: 300px
   min-height: 100px;
   max-height: 200px
@@ -33,7 +32,7 @@ const Item = styled.img`
      5px 5px 0 1px #fff;
     border-radius: 20px;
   }  
-  @media screen and (min-width: 800px){
+  @media screen and (min-width: 700px){
     width: 300px;
     height: 300px;
     margin: 15px;
