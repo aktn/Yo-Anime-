@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import Home from "./containers/home/home";
 import Navbar from "./components/general/navbar";
@@ -29,20 +29,7 @@ const App: React.FC = () => {
     setSearchActive({ open: !searchBarStatus });
   };
 
-  const [results, setResults] = useState([]);
   const [query, setQuery] = useState("");
-
-  useEffect(() => {
-    async function searchAnime() {
-      const response = await fetch(
-        `https://kitsu.io/api/edge/anime?filter[text]=${query}`
-      );
-      const data = await response.json();
-      setResults(data.data);
-      // console.log(data);
-    }
-    searchAnime();
-  }, [query]);
 
   return (
     <div className="App">
@@ -56,7 +43,7 @@ const App: React.FC = () => {
       ) : (
         ""
       )}
-      <Home />
+      <Home query={query} />
     </div>
   );
 };

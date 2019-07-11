@@ -15,7 +15,7 @@ const List = styled.div`
 `;
 
 const Item = styled.img`
-  min-width: 170px;
+  min-width: 150px;
   max-width: 300px
   min-height: 100px;
   max-height: 200px
@@ -32,7 +32,7 @@ const Item = styled.img`
      5px 5px 0 1px #fff;
     border-radius: 20px;
   }  
-  @media screen and (min-width: 700px){
+  @media screen and (min-width: 800px){
     width: 300px;
     height: 300px;
     margin: 15px;
@@ -54,7 +54,23 @@ const Title = styled.h3`
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
 `;
 
-export const Home = () => {
+const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    // Update debounced value after delay
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    // Cancel the timeout if value changes
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+  return debouncedValue;
+};
+
+export const Home = (props: any) => {
   // For list of animes on initial render
   const [animes, setAnime] = useState([]);
 
@@ -68,7 +84,7 @@ export const Home = () => {
   const [sliderActive, setSliderStatus] = useState({ open: false });
 
   // Activate slide
-  const displaySlide = (id: any) => {
+  const displaySlide = (id: string) => {
     const slideStatus = sliderActive.open;
     setSliderStatus({ open: !slideStatus });
     if (!sliderActive.open) setAnimeID(id);
@@ -92,11 +108,9 @@ export const Home = () => {
     }
   }, [animeID]);
 
-  // Retrieve a list of animes
+  // Retrieve a list of trending animes
   async function getAnime() {
-    const response = await fetch(
-      "https://kitsu.io/api/edge/anime?page[limit]=20&page[offset]=0"
-    );
+    const response = await fetch("https://kitsu.io/api/edge/trending/anime");
     const data = await response.json();
     setAnime(data.data);
     setSpinner1(false);
@@ -111,6 +125,31 @@ export const Home = () => {
     const slideStatus = sliderActive.open;
     setSliderStatus({ open: !slideStatus });
   };
+
+  // Only call the latest input from the user
+  const debouncedSearchTerm = useDebounce(props.query, 500);
+
+  // Search anime by text input
+  async function searchAnime(query: string) {
+    const response = await fetch(
+      `https://kitsu.io/api/edge/anime?filter[text]=${query}`
+    );
+    const data = await response.json();
+    setAnime(data.data);
+    setSpinner1(false);
+  }
+  useEffect(() => {
+      // if search term exists
+    if (debouncedSearchTerm) {
+      setAnime([]);
+      setSpinner1(true);
+      searchAnime(debouncedSearchTerm);
+    } else if (debouncedSearchTerm == "") {
+      setAnime([]);
+      setSpinner1(true);
+      getAnime();
+    }
+  }, [debouncedSearchTerm]);
 
   // const Slide = React.lazy(() => import("../../components/general/slider"));
 

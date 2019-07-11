@@ -16,7 +16,7 @@ const Nav = styled.div`
 
 const Links = styled.ul`
   flex: 1;
-  padding-left: 250px;
+  flex-wrap: wrap;
   li {
     display: inline-block;
     margin: 0 0 0 1.25rem;

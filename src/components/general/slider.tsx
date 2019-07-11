@@ -88,8 +88,18 @@ const Slide = (props: any) => {
         </Video>
         <Title>{props.anime.attributes.titles.en}</Title>
         <Info>
-          <Label>Rating: {props.anime.attributes.averageRating}</Label>
-          <Label>Episode: {props.anime.attributes.episodeCount}</Label>
+          <Label>
+            Rating:{" "}
+            {props.anime.attributes.averageRating
+              ? props.anime.attributes.averageRating
+              : "N/A"}
+          </Label>
+          <Label>
+            Episode:{" "}
+            {props.anime.attributes.episodeCount
+              ? props.anime.attributes.episodeCount
+              : "N/A"}
+          </Label>
         </Info>
         <Synopsis>{props.anime.attributes.synopsis}</Synopsis>
       </>
